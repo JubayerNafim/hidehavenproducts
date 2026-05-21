@@ -7,5 +7,6 @@ html, body, #__next {
 }
 
 body {
-  @apply bg-white text-gray-900;
+  background-color: #ffffff;
+  color: #111827;
 }
