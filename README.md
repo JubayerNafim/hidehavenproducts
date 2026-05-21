@@ -15,3 +15,5 @@ Add new routes under `app/`. Example:
 
 - `app/collections/page.tsx` -> `/collections`
 - `app/favorites/page.tsx` -> `/favorites`
+
+trying to solve the config.
