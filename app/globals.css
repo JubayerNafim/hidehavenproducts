@@ -6,14 +6,20 @@
   --dark: #000000;
   --paper: #ffffff;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --soft-border: rgba(207, 196, 197, 0.3);
 }
 
 * {
   box-sizing: border-box;
 }
 
+html,
 body {
   margin: 0;
+  padding: 0;
+}
+
+body {
   font-family: "Open Sans", "Noto Sans Bengali", sans-serif;
   background: var(--cream);
   color: var(--ink);
@@ -43,12 +49,14 @@ a {
   border-radius: 8px;
   overflow: hidden;
   box-shadow: var(--shadow);
+  border: 1px solid var(--soft-border);
 }
 
 .hero__image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   transform: scale(1.05);
 }
 
@@ -153,7 +161,7 @@ a {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 24px;
-  height: 600px;
+  grid-template-rows: 600px;
 }
 
 .category-card {
@@ -161,12 +169,15 @@ a {
   border-radius: 8px;
   overflow: hidden;
   min-height: 0;
+  border: 1px solid var(--soft-border);
+  height: 100%;
 }
 
 .category-card__image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
 }
 
 .category-card__overlay {
@@ -196,6 +207,7 @@ a {
 
 .category-card--large {
   grid-column: span 8;
+  height: 100%;
 }
 
 .category-stack {
@@ -203,6 +215,7 @@ a {
   display: grid;
   grid-template-rows: 1fr 1fr;
   gap: 24px;
+  height: 100%;
 }
 
 .text-button {
@@ -229,6 +242,7 @@ a {
   border-radius: 4px;
   overflow: hidden;
   box-shadow: var(--shadow);
+  border: 1px solid var(--soft-border);
   display: flex;
   flex-direction: column;
 }
@@ -237,12 +251,17 @@ a {
   position: relative;
   height: 350px;
   overflow: hidden;
+  background: #f5f2ed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
 }
 
 .product-card__media img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .badge {
@@ -379,6 +398,7 @@ a {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
 }
 
 .review__rating {
