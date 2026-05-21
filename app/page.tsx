@@ -1,6 +1,11 @@
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+
 export default function HomePage() {
   return (
-    <main className="page" data-node-id="608:3">
+    <>
+      <Header />
+      <main className="page" data-node-id="608:3">
       <section className="hero" data-node-id="608:4">
         <img className="hero__image" src="/images/asset-01.png" alt="" />
         <div className="hero__overlay" data-node-id="608:6">
@@ -329,6 +334,8 @@ export default function HomePage() {
           </article>
         </div>
       </section>
-    </main>
+      </main>
+      <Footer />
+    </>
   );
 }
