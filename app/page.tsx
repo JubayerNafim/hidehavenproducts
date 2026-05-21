@@ -4,7 +4,7 @@ import Header from "./components/Header";
 export default function HomePage() {
   return (
     <>
-      <Header />
+      <Header active="collections" />
       <main className="page" data-node-id="608:3">
       <section className="hero" data-node-id="608:4">
         <img className="hero__image" src="/images/asset-01.png" alt="" />
@@ -13,7 +13,7 @@ export default function HomePage() {
             <span className="hero__pill" data-node-id="608:8">
               Seasonal Collection 2024
             </span>
-            <a className="button button--light" href="#" data-node-id="608:15">
+            <a className="button button--light" href="/shop" data-node-id="608:15">
               Shop All Categories
             </a>
           </div>
@@ -30,7 +30,7 @@ export default function HomePage() {
               Curated essentials for every lifestyle.
             </p>
           </div>
-          <a className="link" href="#" data-node-id="608:24">
+          <a className="link" href="/shop" data-node-id="608:24">
             <span>View All Categories</span>
             <img src="/images/asset-02.svg" alt="" />
           </a>
@@ -89,6 +89,10 @@ export default function HomePage() {
             Our most celebrated pieces, trusted by thousands of customers across Bangladesh for
             their durability and style.
           </p>
+          <a className="link section__link" href="/shop">
+            View All Favorites
+            <img src="/images/asset-02.svg" alt="" />
+          </a>
         </div>
 
         <div className="product-grid" data-node-id="608:64">
