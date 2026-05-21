@@ -1,26 +1,26 @@
 import React from 'react'
 
-const imgHeroSection = "https://www.figma.com/api/mcp/asset/f85ce9c5-97d1-401f-bd64-e194eda6c4e3"
-const imgContainer1 = "https://www.figma.com/api/mcp/asset/798bf89e-b614-436d-8031-a4ca6019efa0"
-const imgContainer2 = "https://www.figma.com/api/mcp/asset/fca286f3-625d-49ea-b277-350de90119b5"
-const imgContainer4 = "https://www.figma.com/api/mcp/asset/9c208d03-39ae-461d-bde5-a728d32cd1d2"
-const imgContainer = "https://www.figma.com/api/mcp/asset/e7747a53-1a3c-4dba-a243-c6c45fa34c42"
-const imgImage = "https://www.figma.com/api/mcp/asset/e06b56dd-6e9a-4010-9178-2cc30ff2e2fb"
-const imgIcon = "https://www.figma.com/api/mcp/asset/4290bbe5-2b0f-47ad-95a6-d4f291036aaf"
-const imgContainer5 = "https://www.figma.com/api/mcp/asset/fa358250-4db9-4331-bf65-ffbf4389720a"
+const imgHeroSection = "/images/hero.jpg"
+const imgContainer1 = "/images/container1.jpg"
+const imgContainer2 = "/images/container2.jpg"
+const imgContainer4 = "/images/container4.jpg"
+const imgContainer = "/images/container.jpg"
+const imgImage = "/images/image.jpg"
+const imgIcon = "/images/icon.jpg"
+const imgContainer5 = "/images/container5.jpg"
 
 export default function Homepage() {
   return (
     <main className="max-w-7xl mx-auto px-6 py-12">
       {/* Hero */}
-      <section className="relative h-[600px] rounded-lg shadow-sm overflow-hidden">
+      <section className="relative rounded-lg shadow-sm overflow-hidden h-[520px] md:h-[640px] lg:h-[760px]">
         <img src={imgHeroSection} alt="hero" className="absolute inset-0 w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center pl-10 pr-40 pt-44 pb-44">
-          <div className="max-w-xl text-white">
+        <div className="absolute inset-0 bg-black/45 flex items-center">
+          <div className="max-w-3xl px-6 md:px-12 lg:px-20 text-white">
             <div className="inline-block bg-amber-600 px-3 py-1 rounded text-sm tracking-wide uppercase">SEASONAL COLLECTION 2024</div>
-            <h1 className="mt-6 text-4xl font-semibold">Timeless Leather Goods</h1>
-            <p className="mt-4 text-lg text-amber-100">Curated essentials for every lifestyle.</p>
-            <a className="inline-block mt-6 bg-white text-black px-8 py-3 rounded">Shop All Categories</a>
+            <h1 className="mt-6 text-3xl md:text-5xl lg:text-6xl font-semibold leading-tight">Timeless Leather Goods</h1>
+            <p className="mt-4 text-base md:text-lg text-amber-100 max-w-xl">Curated essentials for every lifestyle.</p>
+            <a className="inline-block mt-6 bg-white text-black px-6 md:px-8 py-2 md:py-3 rounded">Shop All Categories</a>
           </div>
         </div>
       </section>
@@ -38,8 +38,8 @@ export default function Homepage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-12 gap-6 h-[600px]">
-          <div className="col-span-8 rounded-lg overflow-hidden relative">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-auto lg:h-[600px]">
+          <div className="lg:col-span-8 rounded-lg overflow-hidden relative h-72 md:h-96 lg:h-full">
             <img src={imgContainer1} alt="container1" className="absolute inset-0 w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent p-6 flex flex-col justify-end">
               <h3 className="text-white text-lg">Executive Briefcases</h3>
@@ -48,8 +48,8 @@ export default function Homepage() {
             </div>
           </div>
 
-          <div className="col-span-4 flex flex-col gap-6">
-            <div className="rounded-lg overflow-hidden relative flex-1">
+          <div className="lg:col-span-4 flex flex-col gap-6">
+            <div className="rounded-lg overflow-hidden relative h-36 md:h-44 lg:h-1/2">
               <img src={imgContainer2} alt="wallets" className="absolute inset-0 w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent p-6 flex flex-col justify-end">
                 <h3 className="text-white">Wallets</h3>
@@ -59,7 +59,7 @@ export default function Homepage() {
                 </div>
               </div>
             </div>
-            <div className="rounded-lg overflow-hidden relative flex-1">
+            <div className="rounded-lg overflow-hidden relative h-36 md:h-44 lg:h-1/2">
               <img src={imgContainer4} alt="belts" className="absolute inset-0 w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent p-6 flex flex-col justify-end">
                 <h3 className="text-white">Belts</h3>
@@ -80,10 +80,10 @@ export default function Homepage() {
           <p className="max-w-xl mx-auto text-gray-500">Our most celebrated pieces, trusted by thousands of customers across Bangladesh for their durability and style.</p>
         </div>
 
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {Array.from({ length: 4 }).map((_, i) => (
             <article key={i} className="bg-white rounded-md shadow p-0 overflow-hidden">
-              <div className="h-[350px] relative">
+              <div className="relative h-64 sm:h-80 lg:h-[350px]">
                 <img src={i === 2 ? imgImage : imgContainer1} alt={`product-${i}`} className="w-full h-full object-cover" />
                 {i === 0 && <div className="absolute top-3 left-3 bg-red-700 text-white text-xs px-2 py-1 rounded uppercase">Bestseller</div>}
                 {i === 3 && <div className="absolute top-3 left-3 bg-amber-700 text-white text-xs px-2 py-1 rounded uppercase">New</div>}
