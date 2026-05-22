@@ -1,17 +1,110 @@
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 
-export default function HomePage() {
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.hidehaven.me";
+
+type HeroImage = {
+  image_path: string;
+  caption?: string | null;
+  alt_text?: string | null;
+  link_url?: string | null;
+  active?: number | null;
+};
+
+type Banner = {
+  text: string;
+  active?: number | null;
+};
+
+type Product = {
+  id?: number;
+  name: string;
+  price: number;
+  sale_price?: number | null;
+  image_url?: string | null;
+  is_bestseller?: number | null;
+  is_new?: number | null;
+  is_featured?: number | null;
+  stock?: number | null;
+};
+
+const fallbackHero = {
+  image_path: "/images/asset-01.png",
+  caption: "Seasonal Collection 2024",
+  alt_text: ""
+};
+
+const fallbackProducts: Product[] = [
+  {
+    name: "The Heritage Bifold",
+    price: 2450,
+    image_url: "/images/asset-07.png",
+    is_bestseller: 1,
+    stock: 12
+  },
+  {
+    name: "Classic Stitch Belt",
+    price: 1850,
+    image_url: "/images/asset-11.png",
+    stock: 9
+  },
+  {
+    name: "Artisan Messenger",
+    price: 12500,
+    image_url: "/images/asset-12.png",
+    stock: 4
+  },
+  {
+    name: "Nomad Travel Sleeve",
+    price: 1200,
+    image_url: "/images/asset-14.png",
+    is_new: 1,
+    stock: 2
+  }
+];
+
+const resolveImageUrl = (path?: string | null) => {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
+  return `${API_BASE_URL}${path}`;
+};
+
+const formatPrice = (value?: number | null) => {
+  if (!value && value !== 0) return "";
+  return `BDT ${value.toLocaleString("en-US")}`;
+};
+
+const fetchJson = async <T,>(path: string): Promise<T | null> => {
+  try {
+    const res = await fetch(`${API_BASE_URL}${path}`, { cache: "no-store" });
+    if (!res.ok) return null;
+    return (await res.json()) as T;
+  } catch {
+    return null;
+  }
+};
+
+export default async function HomePage() {
+  const [heroResponse, bannerResponse, productResponse] = await Promise.all([
+    fetchJson<{ data?: HeroImage[] }>("/api/hero-images"),
+    fetchJson<{ data?: Banner[] }>("/api/banners"),
+    fetchJson<{ data?: Product[] }>("/api/products?is_bestseller=1&limit=4")
+  ]);
+
+  const heroImage = heroResponse?.data?.[0] || fallbackHero;
+  const bannerText = bannerResponse?.data?.[0]?.text || fallbackHero.caption || "Seasonal Collection 2024";
+  const products = productResponse?.data && productResponse.data.length > 0 ? productResponse.data : fallbackProducts;
+
   return (
     <>
       <Header active="collections" />
       <main className="page" data-node-id="608:3">
       <section className="hero" data-node-id="608:4">
-        <img className="hero__image" src="/images/asset-01.png" alt="" />
+        <img className="hero__image" src={resolveImageUrl(heroImage.image_path)} alt={heroImage.alt_text || ""} />
         <div className="hero__overlay" data-node-id="608:6">
           <div className="hero__content" data-node-id="608:7">
             <span className="hero__pill" data-node-id="608:8">
-              Seasonal Collection 2024
+              {bannerText}
             </span>
             <a className="button button--light" href="/shop" data-node-id="608:15">
               Shop All Categories
@@ -96,111 +189,45 @@ export default function HomePage() {
         </div>
 
         <div className="product-grid" data-node-id="608:64">
-          <article className="product-card" data-node-id="608:65">
-            <div className="product-card__media">
-              <img src="/images/asset-07.png" alt="" />
-              <span className="badge badge--red" data-node-id="608:68">
-                Bestseller
-              </span>
-            </div>
-            <div className="product-card__body">
-              <h3>The Heritage Bifold</h3>
-              <div className="rating" data-node-id="608:73">
-                <img src="/images/asset-08.svg" alt="" />
-                <img src="/images/asset-08.svg" alt="" />
-                <img src="/images/asset-08.svg" alt="" />
-                <img src="/images/asset-08.svg" alt="" />
-                <img src="/images/asset-09.svg" alt="" />
-                <span>(124)</span>
-              </div>
-              <div className="price">৳ 2,450.00</div>
-              <div className="stock">
-                <img src="/images/asset-10.svg" alt="" />
-                <span>In Stock</span>
-              </div>
-              <a className="button button--dark" href="#">
-                Add to Cart
-              </a>
-            </div>
-          </article>
+          {products.map((product, index) => {
+            const badge = product.is_bestseller ? "Bestseller" : product.is_new ? "New" : product.is_featured ? "Featured" : "";
+            const badgeClass = product.is_new ? "badge badge--brown" : badge ? "badge badge--red" : "";
+            const displayPrice = formatPrice(product.sale_price ?? product.price);
+            const inStock = (product.stock ?? 0) > 0;
+            const imageUrl = resolveImageUrl(product.image_url) || fallbackProducts[index]?.image_url || "";
 
-          <article className="product-card" data-node-id="608:96">
-            <div className="product-card__media">
-              <img src="/images/asset-11.png" alt="" />
-            </div>
-            <div className="product-card__body">
-              <h3>Classic Stitch Belt</h3>
-              <div className="rating" data-node-id="608:102">
-                <img src="/images/asset-08.svg" alt="" />
-                <img src="/images/asset-08.svg" alt="" />
-                <img src="/images/asset-08.svg" alt="" />
-                <img src="/images/asset-08.svg" alt="" />
-                <img src="/images/asset-08.svg" alt="" />
-                <span>(89)</span>
-              </div>
-              <div className="price">৳ 1,850.00</div>
-              <div className="stock">
-                <img src="/images/asset-10.svg" alt="" />
-                <span>In Stock</span>
-              </div>
-              <a className="button button--dark" href="#">
-                Add to Cart
-              </a>
-            </div>
-          </article>
-
-          <article className="product-card" data-node-id="608:125">
-            <div className="product-card__media">
-              <img src="/images/asset-12.png" alt="" />
-            </div>
-            <div className="product-card__body">
-              <h3>Artisan Messenger</h3>
-              <div className="rating" data-node-id="608:131">
-                <img src="/images/asset-08.svg" alt="" />
-                <img src="/images/asset-08.svg" alt="" />
-                <img src="/images/asset-08.svg" alt="" />
-                <img src="/images/asset-08.svg" alt="" />
-                <img src="/images/asset-13.svg" alt="" />
-                <span>(45)</span>
-              </div>
-              <div className="price">৳ 12,500.00</div>
-              <div className="stock">
-                <img src="/images/asset-10.svg" alt="" />
-                <span>In Stock</span>
-              </div>
-              <a className="button button--dark" href="#">
-                Add to Cart
-              </a>
-            </div>
-          </article>
-
-          <article className="product-card" data-node-id="608:154">
-            <div className="product-card__media">
-              <img src="/images/asset-14.png" alt="" />
-              <span className="badge badge--brown" data-node-id="608:157">
-                New
-              </span>
-            </div>
-            <div className="product-card__body">
-              <h3>Nomad Travel Sleeve</h3>
-              <div className="rating" data-node-id="608:162">
-                <img src="/images/asset-08.svg" alt="" />
-                <img src="/images/asset-08.svg" alt="" />
-                <img src="/images/asset-08.svg" alt="" />
-                <img src="/images/asset-08.svg" alt="" />
-                <img src="/images/asset-08.svg" alt="" />
-                <span>(32)</span>
-              </div>
-              <div className="price">৳ 1,200.00</div>
-              <div className="stock">
-                <img src="/images/asset-10.svg" alt="" />
-                <span>Limited Stock</span>
-              </div>
-              <a className="button button--dark" href="#">
-                Add to Cart
-              </a>
-            </div>
-          </article>
+            return (
+              <article className="product-card" data-node-id={`favorite-${index}`} key={product.id ?? index}>
+                <div className="product-card__media">
+                  <img src={imageUrl} alt="" />
+                  {badge ? (
+                    <span className={badgeClass} data-node-id={`favorite-badge-${index}`}>
+                      {badge}
+                    </span>
+                  ) : null}
+                </div>
+                <div className="product-card__body">
+                  <h3>{product.name}</h3>
+                  <div className="rating" data-node-id={`favorite-rating-${index}`}>
+                    <img src="/images/asset-08.svg" alt="" />
+                    <img src="/images/asset-08.svg" alt="" />
+                    <img src="/images/asset-08.svg" alt="" />
+                    <img src="/images/asset-08.svg" alt="" />
+                    <img src="/images/asset-09.svg" alt="" />
+                    <span>(0)</span>
+                  </div>
+                  <div className="price">{displayPrice}</div>
+                  <div className="stock">
+                    <img src="/images/asset-10.svg" alt="" />
+                    <span>{inStock ? "In Stock" : "Limited Stock"}</span>
+                  </div>
+                  <a className="button button--dark" href="#">
+                    Add to Cart
+                  </a>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
 

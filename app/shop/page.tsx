@@ -1,7 +1,83 @@
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 
-export default function ShopPage() {
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.hidehaven.me";
+
+type Product = {
+  id?: number;
+  name: string;
+  price: number;
+  sale_price?: number | null;
+  image_url?: string | null;
+  is_new?: number | null;
+  is_bestseller?: number | null;
+  stock?: number | null;
+};
+
+const fallbackProducts: Product[] = [
+  {
+    name: "The Heritage Satchel",
+    price: 15400,
+    image_url: "/images/shop/shop-img-10.png",
+    is_new: 1
+  },
+  {
+    name: "Obsidian Weekender",
+    price: 32500,
+    image_url: "/images/shop/shop-img-8.png",
+    is_bestseller: 1
+  },
+  {
+    name: "Artisan Minimalist Clutch",
+    price: 7200,
+    image_url: "/images/shop/shop-img-5.png"
+  },
+  {
+    name: "Explorer Watch Roll",
+    price: 5900,
+    image_url: "/images/shop/shop-img-11.png"
+  },
+  {
+    name: "Executive Desk Pad",
+    price: 12000,
+    image_url: "/images/shop/shop-img-9.png"
+  },
+  {
+    name: "Pro Camera Strap",
+    price: 3800,
+    image_url: "/images/shop/shop-img-7.png"
+  }
+];
+
+const resolveImageUrl = (path?: string | null) => {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
+  return `${API_BASE_URL}${path}`;
+};
+
+const formatPrice = (value?: number | null) => {
+  if (!value && value !== 0) return "";
+  return `BDT ${value.toLocaleString("en-US")}`;
+};
+
+const fetchJson = async <T,>(path: string): Promise<T | null> => {
+  try {
+    const res = await fetch(`${API_BASE_URL}${path}`, { cache: "no-store" });
+    if (!res.ok) return null;
+    return (await res.json()) as T;
+  } catch {
+    return null;
+  }
+};
+
+export default async function ShopPage() {
+  const productResponse = await fetchJson<{ data?: Product[]; meta?: { total?: number } }>(
+    "/api/products?is_bestseller=1&limit=12"
+  );
+  const products = productResponse?.data && productResponse.data.length > 0 ? productResponse.data : fallbackProducts;
+  const total = productResponse?.meta?.total ?? products.length;
+  const showingCount = Math.min(12, total);
+
   return (
     <>
       <Header active="bestsellers" searchPlaceholder="Search heritage goods..." cartCount={2} />
@@ -93,7 +169,7 @@ export default function ShopPage() {
 
           <div className="shop-products">
             <div className="shop-toolbar">
-              <span>Showing 1-12 of 124 products</span>
+              <span>Showing 1-{showingCount} of {total} products</span>
               <div className="shop-toolbar__actions">
                 <label>
                   Sort by:
@@ -111,229 +187,54 @@ export default function ShopPage() {
             </div>
 
             <div className="shop-grid">
-              <article className="shop-card">
-                <span className="shop-card__badge">New</span>
-                <img src="/images/shop/shop-img-10.png" alt="" />
-                <div className="shop-card__info">
-                  <div>
-                    <h3>The Heritage Satchel</h3>
-                    <p>Full Grain Leather</p>
-                  </div>
-                  <button type="button" aria-label="Wishlist">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path
-                        d="M12 20.4s-7.1-4.3-9.4-8.3C.9 9.4 2.1 6.6 5 6.6c2 0 3.4 1.1 4.6 2.6 1.2-1.5 2.6-2.6 4.6-2.6 2.9 0 4.1 2.8 2.4 5.5-2.3 4-9.6 8.3-9.6 8.3z"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <div className="shop-card__footer">
-                  <strong>BDT 15,400</strong>
-                  <button type="button" aria-label="Add to cart">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path
-                        d="M5 6h2l2.3 9.2a1 1 0 0 0 1 .8h8.4a1 1 0 0 0 1-.7L22 9H8"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <circle cx="10" cy="19" r="1.4" fill="currentColor" />
-                      <circle cx="18" cy="19" r="1.4" fill="currentColor" />
-                    </svg>
-                  </button>
-                </div>
-              </article>
+              {products.map((product, index) => {
+                const isNew = !!product.is_new;
+                const isLimited = !!product.is_bestseller && !isNew;
+                const badge = isNew ? "New" : isLimited ? "Limited" : "";
+                const badgeClass = isLimited ? "shop-card__badge shop-card__badge--dark" : "shop-card__badge";
+                const displayPrice = formatPrice(product.sale_price ?? product.price);
+                const imageUrl = resolveImageUrl(product.image_url) || fallbackProducts[index]?.image_url || "";
 
-              <article className="shop-card">
-                <span className="shop-card__badge shop-card__badge--dark">Limited</span>
-                <img src="/images/shop/shop-img-8.png" alt="" />
-                <div className="shop-card__info">
-                  <div>
-                    <h3>Obsidian Weekender</h3>
-                    <p>48hr Capacity</p>
-                  </div>
-                  <button type="button" aria-label="Wishlist">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path
-                        d="M12 20.4s-7.1-4.3-9.4-8.3C.9 9.4 2.1 6.6 5 6.6c2 0 3.4 1.1 4.6 2.6 1.2-1.5 2.6-2.6 4.6-2.6 2.9 0 4.1 2.8 2.4 5.5-2.3 4-9.6 8.3-9.6 8.3z"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <div className="shop-card__footer">
-                  <strong>BDT 32,500</strong>
-                  <button type="button" aria-label="Add to cart">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path
-                        d="M5 6h2l2.3 9.2a1 1 0 0 0 1 .8h8.4a1 1 0 0 0 1-.7L22 9H8"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <circle cx="10" cy="19" r="1.4" fill="currentColor" />
-                      <circle cx="18" cy="19" r="1.4" fill="currentColor" />
-                    </svg>
-                  </button>
-                </div>
-              </article>
-
-              <article className="shop-card">
-                <img src="/images/shop/shop-img-5.png" alt="" />
-                <div className="shop-card__info">
-                  <div>
-                    <h3>Artisan Minimalist Clutch</h3>
-                    <p>Hand-stitched</p>
-                  </div>
-                  <button type="button" aria-label="Wishlist">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path
-                        d="M12 20.4s-7.1-4.3-9.4-8.3C.9 9.4 2.1 6.6 5 6.6c2 0 3.4 1.1 4.6 2.6 1.2-1.5 2.6-2.6 4.6-2.6 2.9 0 4.1 2.8 2.4 5.5-2.3 4-9.6 8.3-9.6 8.3z"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <div className="shop-card__footer">
-                  <strong>BDT 7,200</strong>
-                  <button type="button" aria-label="Add to cart">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path
-                        d="M5 6h2l2.3 9.2a1 1 0 0 0 1 .8h8.4a1 1 0 0 0 1-.7L22 9H8"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <circle cx="10" cy="19" r="1.4" fill="currentColor" />
-                      <circle cx="18" cy="19" r="1.4" fill="currentColor" />
-                    </svg>
-                  </button>
-                </div>
-              </article>
-
-              <article className="shop-card">
-                <img src="/images/shop/shop-img-11.png" alt="" />
-                <div className="shop-card__info">
-                  <div>
-                    <h3>Explorer Watch Roll</h3>
-                    <p>Green Pebble Grain</p>
-                  </div>
-                  <button type="button" aria-label="Wishlist">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path
-                        d="M12 20.4s-7.1-4.3-9.4-8.3C.9 9.4 2.1 6.6 5 6.6c2 0 3.4 1.1 4.6 2.6 1.2-1.5 2.6-2.6 4.6-2.6 2.9 0 4.1 2.8 2.4 5.5-2.3 4-9.6 8.3-9.6 8.3z"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <div className="shop-card__footer">
-                  <strong>BDT 5,900</strong>
-                  <button type="button" aria-label="Add to cart">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path
-                        d="M5 6h2l2.3 9.2a1 1 0 0 0 1 .8h8.4a1 1 0 0 0 1-.7L22 9H8"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <circle cx="10" cy="19" r="1.4" fill="currentColor" />
-                      <circle cx="18" cy="19" r="1.4" fill="currentColor" />
-                    </svg>
-                  </button>
-                </div>
-              </article>
-
-              <article className="shop-card">
-                <img src="/images/shop/shop-img-9.png" alt="" />
-                <div className="shop-card__info">
-                  <div>
-                    <h3>Executive Desk Pad</h3>
-                    <p>Spacious & Smooth</p>
-                  </div>
-                  <button type="button" aria-label="Wishlist">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path
-                        d="M12 20.4s-7.1-4.3-9.4-8.3C.9 9.4 2.1 6.6 5 6.6c2 0 3.4 1.1 4.6 2.6 1.2-1.5 2.6-2.6 4.6-2.6 2.9 0 4.1 2.8 2.4 5.5-2.3 4-9.6 8.3-9.6 8.3z"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <div className="shop-card__footer">
-                  <strong>BDT 12,000</strong>
-                  <button type="button" aria-label="Add to cart">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path
-                        d="M5 6h2l2.3 9.2a1 1 0 0 0 1 .8h8.4a1 1 0 0 0 1-.7L22 9H8"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <circle cx="10" cy="19" r="1.4" fill="currentColor" />
-                      <circle cx="18" cy="19" r="1.4" fill="currentColor" />
-                    </svg>
-                  </button>
-                </div>
-              </article>
-
-              <article className="shop-card">
-                <img src="/images/shop/shop-img-7.png" alt="" />
-                <div className="shop-card__info">
-                  <div>
-                    <h3>Pro Camera Strap</h3>
-                    <p>Heavy Duty Support</p>
-                  </div>
-                  <button type="button" aria-label="Wishlist">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path
-                        d="M12 20.4s-7.1-4.3-9.4-8.3C.9 9.4 2.1 6.6 5 6.6c2 0 3.4 1.1 4.6 2.6 1.2-1.5 2.6-2.6 4.6-2.6 2.9 0 4.1 2.8 2.4 5.5-2.3 4-9.6 8.3-9.6 8.3z"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <div className="shop-card__footer">
-                  <strong>BDT 3,800</strong>
-                  <button type="button" aria-label="Add to cart">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path
-                        d="M5 6h2l2.3 9.2a1 1 0 0 0 1 .8h8.4a1 1 0 0 0 1-.7L22 9H8"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <circle cx="10" cy="19" r="1.4" fill="currentColor" />
-                      <circle cx="18" cy="19" r="1.4" fill="currentColor" />
-                    </svg>
-                  </button>
-                </div>
-              </article>
+                return (
+                  <article className="shop-card" key={product.id ?? index}>
+                    {badge ? <span className={badgeClass}>{badge}</span> : null}
+                    <img src={imageUrl} alt="" />
+                    <div className="shop-card__info">
+                      <div>
+                        <h3>{product.name}</h3>
+                        <p>Hand-stitched</p>
+                      </div>
+                      <button type="button" aria-label="Wishlist">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path
+                            d="M12 20.4s-7.1-4.3-9.4-8.3C.9 9.4 2.1 6.6 5 6.6c2 0 3.4 1.1 4.6 2.6 1.2-1.5 2.6-2.6 4.6-2.6 2.9 0 4.1 2.8 2.4 5.5-2.3 4-9.6 8.3-9.6 8.3z"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <div className="shop-card__footer">
+                      <strong>{displayPrice}</strong>
+                      <button type="button" aria-label="Add to cart">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path
+                            d="M5 6h2l2.3 9.2a1 1 0 0 0 1 .8h8.4a1 1 0 0 0 1-.7L22 9H8"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <circle cx="10" cy="19" r="1.4" fill="currentColor" />
+                          <circle cx="18" cy="19" r="1.4" fill="currentColor" />
+                        </svg>
+                      </button>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
 
             <div className="shop-pagination">

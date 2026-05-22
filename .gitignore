@@ -1,2 +1,9 @@
 node_modules/
 HideHave - Product Catalog (Artisan Trust Redesign).pdf/
+.gitignore/
+.git/
+hidehave_database2.sql/
+backend/
+.env.local/
+composer-setup.php/
+
