@@ -2,6 +2,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.hidehaven.me";
+const MEDIA_BASE_URL = process.env.NEXT_PUBLIC_MEDIA_BASE_URL || "https://hidehaven.me";
 
 type Product = {
   id?: number;
@@ -9,6 +10,7 @@ type Product = {
   price: number;
   sale_price?: number | null;
   image_url?: string | null;
+  image_full_url?: string | null;
   is_new?: number | null;
   is_bestseller?: number | null;
   stock?: number | null;
@@ -52,7 +54,7 @@ const fallbackProducts: Product[] = [
 const resolveImageUrl = (path?: string | null) => {
   if (!path) return "";
   if (path.startsWith("http")) return path;
-  return `${API_BASE_URL}${path}`;
+  return `${MEDIA_BASE_URL}${path}`;
 };
 
 const formatPrice = (value?: number | null) => {
@@ -193,7 +195,7 @@ export default async function ShopPage() {
                 const badge = isNew ? "New" : isLimited ? "Limited" : "";
                 const badgeClass = isLimited ? "shop-card__badge shop-card__badge--dark" : "shop-card__badge";
                 const displayPrice = formatPrice(product.sale_price ?? product.price);
-                const imageUrl = resolveImageUrl(product.image_url) || fallbackProducts[index]?.image_url || "";
+                const imageUrl = product.image_full_url || resolveImageUrl(product.image_url) || fallbackProducts[index]?.image_url || "";
 
                 return (
                   <article className="shop-card" key={product.id ?? index}>

@@ -2,9 +2,11 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.hidehaven.me";
+const MEDIA_BASE_URL = process.env.NEXT_PUBLIC_MEDIA_BASE_URL || "https://hidehaven.me";
 
 type HeroImage = {
   image_path: string;
+  image_full_url?: string | null;
   caption?: string | null;
   alt_text?: string | null;
   link_url?: string | null;
@@ -22,6 +24,7 @@ type Product = {
   price: number;
   sale_price?: number | null;
   image_url?: string | null;
+  image_full_url?: string | null;
   is_bestseller?: number | null;
   is_new?: number | null;
   is_featured?: number | null;
@@ -66,7 +69,7 @@ const fallbackProducts: Product[] = [
 const resolveImageUrl = (path?: string | null) => {
   if (!path) return "";
   if (path.startsWith("http")) return path;
-  return `${API_BASE_URL}${path}`;
+  return `${MEDIA_BASE_URL}${path}`;
 };
 
 const formatPrice = (value?: number | null) => {
@@ -94,13 +97,14 @@ export default async function HomePage() {
   const heroImage = heroResponse?.data?.[0] || fallbackHero;
   const bannerText = bannerResponse?.data?.[0]?.text || fallbackHero.caption || "Seasonal Collection 2024";
   const products = productResponse?.data && productResponse.data.length > 0 ? productResponse.data : fallbackProducts;
+  const heroImageUrl = heroImage.image_full_url || resolveImageUrl(heroImage.image_path);
 
   return (
     <>
       <Header active="collections" />
       <main className="page" data-node-id="608:3">
       <section className="hero" data-node-id="608:4">
-        <img className="hero__image" src={resolveImageUrl(heroImage.image_path)} alt={heroImage.alt_text || ""} />
+        <img className="hero__image" src={heroImageUrl} alt={heroImage.alt_text || ""} />
         <div className="hero__overlay" data-node-id="608:6">
           <div className="hero__content" data-node-id="608:7">
             <span className="hero__pill" data-node-id="608:8">
@@ -194,7 +198,7 @@ export default async function HomePage() {
             const badgeClass = product.is_new ? "badge badge--brown" : badge ? "badge badge--red" : "";
             const displayPrice = formatPrice(product.sale_price ?? product.price);
             const inStock = (product.stock ?? 0) > 0;
-            const imageUrl = resolveImageUrl(product.image_url) || fallbackProducts[index]?.image_url || "";
+            const imageUrl = product.image_full_url || resolveImageUrl(product.image_url) || fallbackProducts[index]?.image_url || "";
 
             return (
               <article className="product-card" data-node-id={`favorite-${index}`} key={product.id ?? index}>
