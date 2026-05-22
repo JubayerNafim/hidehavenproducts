@@ -3,7 +3,7 @@ export default function Footer() {
     <footer className="site-footer" data-node-id="608:315">
       <div className="site-footer__grid" data-node-id="608:316">
         <div className="site-footer__brand" data-node-id="608:317">
-          <h3 data-node-id="608:319">HIDE HAVEN</h3>
+          <img src="/images/logo.png" alt="Hide Haven" className="site-footer__logo" />
           <p data-node-id="608:321">
             The leading purveyor of handcrafted full-grain leather goods in Bangladesh. Focused on
             sustainability, durability, and timeless style.

@@ -40,7 +40,7 @@ export default function AdminLoginPage() {
     <div className="admin-login-page">
       <div className="admin-login-card">
         <div className="admin-login-header">
-          <h1>HIDE HAVEN</h1>
+          <img src="/images/logo.png" alt="Hide Haven" className="admin-login__logo" />
           <p>Admin Panel</p>
         </div>
         <form onSubmit={handleLogin} className="admin-login-form">

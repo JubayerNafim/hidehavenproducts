@@ -137,7 +137,10 @@ export default function AdminInventory() {
                       </div>
                     </td>
                     <td>
-                      <a href={`/shop/${p.slug}`} className="admin-link" target="_blank">View</a>
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <a href={`/admin/products/${p.id}`} className="admin-link">Edit</a>
+                        <a href={`/shop/${p.slug}`} className="admin-link" target="_blank">View</a>
+                      </div>
                     </td>
                   </tr>
                 );

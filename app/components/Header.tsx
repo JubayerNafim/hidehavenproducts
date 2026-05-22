@@ -47,7 +47,9 @@ export default function Header({
     <header className="site-header">
       <div className="site-header__inner">
         <div className="site-header__logo">
-          <a href="/">HIDE HAVEN</a>
+          <a href="/">
+            <img src="/images/logo.png" alt="Hide Haven" className="site-header__logo-img" />
+          </a>
         </div>
         <nav className="site-header__nav">
           <a

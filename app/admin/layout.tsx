@@ -62,7 +62,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="admin-shell">
       <aside className="admin-sidebar">
         <div className="admin-sidebar__brand">
-          <Link href="/admin">HIDE HAVEN</Link>
+          <Link href="/admin">
+            <img src="/images/logo.png" alt="Hide Haven" className="admin-sidebar__logo" />
+          </Link>
           <span className="admin-sidebar__sub">Admin Panel</span>
         </div>
         <nav className="admin-sidebar__nav">

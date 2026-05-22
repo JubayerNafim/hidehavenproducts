@@ -15,6 +15,10 @@ export const metadata: Metadata = {
     "bags",
     "belts",
   ],
+  icons: {
+    icon: "/images/logo.png",
+    shortcut: "/images/logo.png",
+  },
   openGraph: {
     title: "Hide Haven — Handcrafted Full-Grain Leather Goods",
     description:
