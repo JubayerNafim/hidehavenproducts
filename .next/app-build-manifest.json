@@ -1,47 +1,20 @@
 {
   "pages": {
-    "/_not-found/page": [
-      "static/chunks/webpack-889906d2d9470bce.js",
-      "static/chunks/fd9d1056-2821b0f0cabcd8bd.js",
-      "static/chunks/23-b75664ace61c0abb.js",
-      "static/chunks/main-app-da982dec1d2f06ed.js",
-      "static/chunks/app/_not-found/page-05886c10710171db.js"
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/page.js"
     ],
     "/layout": [
-      "static/chunks/webpack-889906d2d9470bce.js",
-      "static/chunks/fd9d1056-2821b0f0cabcd8bd.js",
-      "static/chunks/23-b75664ace61c0abb.js",
-      "static/chunks/main-app-da982dec1d2f06ed.js",
-      "static/css/799b78a7864669b5.css",
-      "static/chunks/app/layout-dcb5d304a7e58090.js"
-    ],
-    "/collections/page": [
-      "static/chunks/webpack-889906d2d9470bce.js",
-      "static/chunks/fd9d1056-2821b0f0cabcd8bd.js",
-      "static/chunks/23-b75664ace61c0abb.js",
-      "static/chunks/main-app-da982dec1d2f06ed.js",
-      "static/chunks/app/collections/page-efb6d0b6a53422d5.js"
-    ],
-    "/cart/page": [
-      "static/chunks/webpack-889906d2d9470bce.js",
-      "static/chunks/fd9d1056-2821b0f0cabcd8bd.js",
-      "static/chunks/23-b75664ace61c0abb.js",
-      "static/chunks/main-app-da982dec1d2f06ed.js",
-      "static/chunks/app/cart/page-5eb8527b19f4e583.js"
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/layout.css",
+      "static/chunks/app/layout.js"
     ],
     "/shop/page": [
-      "static/chunks/webpack-889906d2d9470bce.js",
-      "static/chunks/fd9d1056-2821b0f0cabcd8bd.js",
-      "static/chunks/23-b75664ace61c0abb.js",
-      "static/chunks/main-app-da982dec1d2f06ed.js",
-      "static/chunks/app/shop/page-6c5956e9b1e36755.js"
-    ],
-    "/page": [
-      "static/chunks/webpack-889906d2d9470bce.js",
-      "static/chunks/fd9d1056-2821b0f0cabcd8bd.js",
-      "static/chunks/23-b75664ace61c0abb.js",
-      "static/chunks/main-app-da982dec1d2f06ed.js",
-      "static/chunks/app/page-26555c0fbfb27e72.js"
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/shop/page.js"
     ]
   }
 }

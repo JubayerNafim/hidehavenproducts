@@ -31,8 +31,9 @@ type Product = {
   stock?: number | null;
 };
 
-const fallbackHero = {
+const fallbackHero: HeroImage = {
   image_path: "/images/asset-01.png",
+  image_full_url: null,
   caption: "Seasonal Collection 2024",
   alt_text: ""
 };
