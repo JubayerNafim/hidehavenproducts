@@ -6,4 +6,5 @@ hidehave_database2.sql/
 backend/
 .env.local/
 composer-setup.php/
+instructions.md/
 

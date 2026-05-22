@@ -1,35 +1,14 @@
 import Footer from "./components/Footer";
 import Header from "./components/Header";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.hidehaven.me";
-const MEDIA_BASE_URL = process.env.NEXT_PUBLIC_MEDIA_BASE_URL || "https://hidehaven.me";
-
-type HeroImage = {
-  image_path: string;
-  image_full_url?: string | null;
-  caption?: string | null;
-  alt_text?: string | null;
-  link_url?: string | null;
-  active?: number | null;
-};
-
-type Banner = {
-  text: string;
-  active?: number | null;
-};
-
-type Product = {
-  id?: number;
-  name: string;
-  price: number;
-  sale_price?: number | null;
-  image_url?: string | null;
-  image_full_url?: string | null;
-  is_bestseller?: number | null;
-  is_new?: number | null;
-  is_featured?: number | null;
-  stock?: number | null;
-};
+import {
+  fetchHeroImages,
+  fetchBanners,
+  fetchProducts,
+  resolveImageUrl,
+  formatPrice,
+  type HeroImage,
+  type Product,
+} from "./lib/api";
 
 const fallbackHero: HeroImage = {
   image_path: "/images/asset-01.png",
@@ -67,32 +46,11 @@ const fallbackProducts: Product[] = [
   }
 ];
 
-const resolveImageUrl = (path?: string | null) => {
-  if (!path) return "";
-  if (path.startsWith("http")) return path;
-  return `${MEDIA_BASE_URL}${path}`;
-};
-
-const formatPrice = (value?: number | null) => {
-  if (!value && value !== 0) return "";
-  return `BDT ${value.toLocaleString("en-US")}`;
-};
-
-const fetchJson = async <T,>(path: string): Promise<T | null> => {
-  try {
-    const res = await fetch(`${API_BASE_URL}${path}`, { cache: "no-store" });
-    if (!res.ok) return null;
-    return (await res.json()) as T;
-  } catch {
-    return null;
-  }
-};
-
 export default async function HomePage() {
   const [heroResponse, bannerResponse, productResponse] = await Promise.all([
-    fetchJson<{ data?: HeroImage[] }>("/api/hero-images"),
-    fetchJson<{ data?: Banner[] }>("/api/banners"),
-    fetchJson<{ data?: Product[] }>("/api/products?is_bestseller=1&limit=4")
+    fetchHeroImages(),
+    fetchBanners(),
+    fetchProducts({ is_bestseller: "1", limit: "4" })
   ]);
 
   const heroImage = heroResponse?.data?.[0] || fallbackHero;
@@ -144,7 +102,7 @@ export default async function HomePage() {
               <p className="category-card__copy" data-node-id="608:36">
                 Command the room with timeless professional gear.
               </p>
-              <a className="button button--light" href="#" data-node-id="608:37">
+              <a className="button button--light" href="/collections" data-node-id="608:37">
                 Shop Travel Bags
               </a>
             </div>
@@ -156,7 +114,7 @@ export default async function HomePage() {
                 <h3 className="category-card__title" data-node-id="608:44">
                   Wallets
                 </h3>
-                <a className="text-button" href="#" data-node-id="608:45">
+                <a className="text-button" href="/collections" data-node-id="608:45">
                   <span>Explore Wallets</span>
                   <img src="/images/asset-05.svg" alt="" />
                 </a>
@@ -168,7 +126,7 @@ export default async function HomePage() {
                 <h3 className="category-card__title" data-node-id="608:53">
                   Belts
                 </h3>
-                <a className="text-button" href="#" data-node-id="608:54">
+                <a className="text-button" href="/collections" data-node-id="608:54">
                   <span>Explore Belts</span>
                   <img src="/images/asset-05.svg" alt="" />
                 </a>
@@ -203,16 +161,20 @@ export default async function HomePage() {
 
             return (
               <article className="product-card" data-node-id={`favorite-${index}`} key={product.id ?? index}>
-                <div className="product-card__media">
-                  <img src={imageUrl} alt="" />
-                  {badge ? (
-                    <span className={badgeClass} data-node-id={`favorite-badge-${index}`}>
-                      {badge}
-                    </span>
-                  ) : null}
-                </div>
+                <a href={`/shop/${product.slug || `product-${index}`}`}>
+                  <div className="product-card__media">
+                    <img src={imageUrl} alt="" />
+                    {badge ? (
+                      <span className={badgeClass} data-node-id={`favorite-badge-${index}`}>
+                        {badge}
+                      </span>
+                    ) : null}
+                  </div>
+                </a>
                 <div className="product-card__body">
-                  <h3>{product.name}</h3>
+                  <a href={`/shop/${product.slug || `product-${index}`}`}>
+                    <h3>{product.name}</h3>
+                  </a>
                   <div className="rating" data-node-id={`favorite-rating-${index}`}>
                     <img src="/images/asset-08.svg" alt="" />
                     <img src="/images/asset-08.svg" alt="" />
@@ -226,8 +188,8 @@ export default async function HomePage() {
                     <img src="/images/asset-10.svg" alt="" />
                     <span>{inStock ? "In Stock" : "Limited Stock"}</span>
                   </div>
-                  <a className="button button--dark" href="#">
-                    Add to Cart
+                  <a className="button button--dark" href={`/shop/${product.slug || `product-${index}`}`}>
+                    View Details
                   </a>
                 </div>
               </article>
