@@ -435,3 +435,12 @@ The following features from the original Future Development Notes have been impl
   - `app/shop/[slug]/ProductDetailGallery.tsx` — **Created** — client component for thumbnail image gallery interaction
   - `app/shop/page.tsx` — **Modified** — hero banner now dynamically renders the #1 bestseller product from API
 - **Summary:** Fixed a 500 error on product detail pages caused by passing `onClick` handlers from a Server Component to DOM elements. Extracted thumbnail gallery and color swatch selectors into dedicated Client Components. Updated the shop page hero section to dynamically show the top bestseller product (image, badge, name, description, price, detail link) fetched from the API, with the next two bestsellers as side cards. Falls back to hardcoded content when API data is unavailable.
+
+### 2026-05-23 — Cart Toast, Delivery Fee, COD Policy & Out-of-Stock Guard
+- **Files changed:**
+  - `app/components/CartContext.tsx` — **Modified** — added toast notification system; shows item name and total cart count on every add-to-cart, auto-dismisses after 3 seconds
+  - `app/cart/page.tsx` — **Modified** — Dhaka delivery fee changed from free to BDT 60; added cash-on-delivery info and cancellation policy message in checkout form
+  - `app/shop/ShopContent.tsx` — **Modified** — added stock check to add-to-cart buttons; out-of-stock items show "Out of Stock" badge and have disabled buttons
+  - `app/collections/page.tsx` — **Modified** — same out-of-stock guard applied
+  - `app/globals.css` — **Modified** — added styles for cart toast (slide-up animation), checkout info panel, out-of-stock badge
+- **Summary:** Three improvements: (1) Cart toast notification appears on every add-to-cart showing product name and updated item count. (2) Dhaka delivery fee updated to BDT 60 (was free), and checkout form now explains cash-on-delivery with cancellation policy (pay only delivery charge). (3) Out-of-stock products can no longer be added to cart — buttons are disabled and an "Out of Stock" badge is shown on product cards.
