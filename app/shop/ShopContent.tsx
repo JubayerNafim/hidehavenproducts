@@ -225,11 +225,13 @@ export default function ShopContent({ initialData }: Props) {
                 "";
               const wishlisted = isWishlisted(product.id);
               const productSlug = product.slug;
+              const inStock = (product.stock ?? 0) > 0;
 
               return (
                 <article className="shop-card" key={product.id ?? index}>
                   <a href={`/shop/${productSlug || `product-${index}`}`}>
                     {badge ? <span className={badgeClass}>{badge}</span> : null}
+                    {!inStock && <span className="shop-card__badge shop-card__badge--oos">Out of Stock</span>}
                     <img src={imageUrl} alt={product.name} />
                   </a>
                   <div className="shop-card__info">
@@ -273,7 +275,9 @@ export default function ShopContent({ initialData }: Props) {
                     <button
                       type="button"
                       aria-label="Add to cart"
+                      disabled={!inStock}
                       onClick={() =>
+                        inStock &&
                         addItem({
                           product_id: product.id,
                           name: product.name,
@@ -284,6 +288,7 @@ export default function ShopContent({ initialData }: Props) {
                           slug: productSlug,
                         })
                       }
+                      style={!inStock ? { opacity: 0.4, cursor: "not-allowed", background: "#888" } : undefined}
                     >
                       <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path

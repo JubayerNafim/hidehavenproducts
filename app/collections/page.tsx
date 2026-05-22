@@ -84,6 +84,7 @@ export default function CollectionsPage() {
                     const imageUrl = product.image_full_url || resolveImageUrl(product.image_url) || "";
                     const wishlisted = isWishlisted(product.id);
                     const productSlug = product.slug;
+                    const inStock = (product.stock ?? 0) > 0;
 
                     return (
                       <article className="shop-card" key={product.id ?? index}>
@@ -93,6 +94,7 @@ export default function CollectionsPage() {
                           ) : product.is_bestseller ? (
                             <span className="shop-card__badge shop-card__badge--dark">Bestseller</span>
                           ) : null}
+                          {!inStock && <span className="shop-card__badge shop-card__badge--oos">Out of Stock</span>}
                           <img src={imageUrl} alt={product.name} />
                         </a>
                         <div className="shop-card__info">
@@ -133,15 +135,20 @@ export default function CollectionsPage() {
                           <button
                             type="button"
                             aria-label="Add to cart"
-                            onClick={() => addItem({
-                              product_id: product.id,
-                              name: product.name,
-                              price: product.sale_price ?? product.price,
-                              quantity: 1,
-                              image_url: product.image_url,
-                              image_full_url: product.image_full_url,
-                              slug: productSlug,
-                            })}
+                            disabled={!inStock}
+                            onClick={() =>
+                              inStock &&
+                              addItem({
+                                product_id: product.id,
+                                name: product.name,
+                                price: product.sale_price ?? product.price,
+                                quantity: 1,
+                                image_url: product.image_url,
+                                image_full_url: product.image_full_url,
+                                slug: productSlug,
+                              })
+                            }
+                            style={!inStock ? { opacity: 0.4, cursor: "not-allowed", background: "#888" } : undefined}
                           >
                             <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
                               <path

@@ -20,6 +20,8 @@ type CartContextType = {
   clearCart: () => void;
   itemCount: number;
   subtotal: number;
+  toastMessage: string | null;
+  dismissToast: () => void;
 };
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -31,6 +33,7 @@ const STORAGE_KEY = "hidehaven_cart";
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -55,21 +58,33 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, hydrated]);
 
+  const dismissToast = useCallback(() => {
+    setToastMessage(null);
+  }, []);
+
   const addItem = useCallback((item: CartItem) => {
     setItems((prev) => {
       // If same product already in cart, increment quantity
       const existingIdx = prev.findIndex(
         (i) => i.product_id && i.product_id === item.product_id
       );
+      let updated: CartItem[];
+      let qty: number;
       if (existingIdx >= 0) {
-        const updated = [...prev];
+        updated = [...prev];
         updated[existingIdx] = {
           ...updated[existingIdx],
           quantity: updated[existingIdx].quantity + item.quantity,
         };
-        return updated;
+        qty = updated[existingIdx].quantity;
+      } else {
+        updated = [...prev, item];
+        qty = item.quantity;
       }
-      return [...prev, item];
+      const totalItems = updated.reduce((s, i) => s + i.quantity, 0);
+      setToastMessage(`"${item.name}" ×${qty} added! Cart now has ${totalItems} item${totalItems !== 1 ? "s" : ""}.`);
+      setTimeout(() => setToastMessage(null), 3000);
+      return updated;
     });
   }, []);
 
@@ -106,9 +121,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
         clearCart,
         itemCount,
         subtotal,
+        toastMessage,
+        dismissToast,
       }}
     >
       {children}
+      {/* Toast notification */}
+      {toastMessage && (
+        <div className="cart-toast" onClick={dismissToast}>
+          <span>{toastMessage}</span>
+          <button className="cart-toast__close" aria-label="Dismiss">✕</button>
+        </div>
+      )}
     </CartContext.Provider>
   );
 }

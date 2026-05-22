@@ -7,4 +7,5 @@ backend/
 .env.local/
 composer-setup.php/
 instructions.md/
+.next/
 

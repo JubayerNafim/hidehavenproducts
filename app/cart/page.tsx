@@ -10,7 +10,7 @@ import type { OrderPayload } from "../lib/api";
 export default function CartPage() {
   const { items, removeItem, updateQuantity, subtotal, clearCart } = useCart();
   const hasItems = items.length > 0;
-  const DELIVERY_FEE_DHAKA = 0;
+  const DELIVERY_FEE_DHAKA = 60;
   const DELIVERY_FEE_OUTSIDE = 120;
 
   const [deliveryArea, setDeliveryArea] = useState<"dhaka" | "outside">("dhaka");
@@ -182,13 +182,13 @@ export default function CartPage() {
                       onChange={(e) => setDeliveryArea(e.target.value as "dhaka" | "outside")}
                       className="cart-summary__select"
                     >
-                      <option value="dhaka">Inside Dhaka (Free)</option>
+                      <option value="dhaka">Inside Dhaka (BDT 60)</option>
                       <option value="outside">Outside Dhaka (BDT 120)</option>
                     </select>
                   </div>
                   <div className="cart-summary__row">
                     <span>Delivery Fee</span>
-                    <span>{deliveryFee === 0 ? "Free" : `BDT ${deliveryFee}`}</span>
+                    <span>BDT {deliveryFee}</span>
                   </div>
                   <div className="cart-summary__total">
                     <span>Total</span>
@@ -259,6 +259,15 @@ export default function CartPage() {
                         rows={2}
                       />
                     </div>
+                    <div className="cart-checkout-form__info">
+                      <strong>💵 Cash on Delivery</strong>
+                      <p>Pay when your order arrives. No advance payment needed.</p>
+                      <p>
+                        <strong>Changed your mind?</strong> You can cancel after delivery and pay
+                        only the delivery charge (<strong>BDT {deliveryFee}</strong>). No questions asked.
+                      </p>
+                    </div>
+
                     <button
                       className="cart-summary__cta"
                       type="button"
