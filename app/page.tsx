@@ -69,7 +69,7 @@ export default async function HomePage() {
             <span className="hero__pill" data-node-id="608:8">
               {bannerText}
             </span>
-            <a className="button button--light" href="/shop" data-node-id="608:15">
+            <a className="button button--light" href="/collections" data-node-id="608:15">
               Shop All Categories
             </a>
           </div>
